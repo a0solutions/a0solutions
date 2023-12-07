@@ -7,8 +7,8 @@ import { HomeComponent } from './home/home.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ContactComponent } from './contact/contact.component';
-import { FooterComponent } from './footer/footer.component';
-import { NavComponent } from './nav/nav.component';
+import { FooterComponent } from './Share/components/footer/footer.component';
+import { NavComponent } from './Share/components/nav/nav.component';
 import { TemplateComponent } from './template/template.component';
 
 @NgModule({
@@ -20,13 +20,10 @@ import { TemplateComponent } from './template/template.component';
     ContactComponent,
     FooterComponent,
     NavComponent,
-    TemplateComponent
+    TemplateComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
