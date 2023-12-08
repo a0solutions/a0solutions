@@ -7,9 +7,11 @@ import { HomeComponent } from './home/home.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { ContactComponent } from './contact/contact.component';
-import { FooterComponent } from './Share/components/footer/footer.component';
 import { NavComponent } from './Share/components/nav/nav.component';
 import { TemplateComponent } from './template/template.component';
+import { MisionComponent } from './mision/mision.component';
+import { ServicesComponent } from './services/services.component';
+import { ExtrasComponent } from './Share/components/extras/extras.component';
 
 @NgModule({
   declarations: [
@@ -18,9 +20,11 @@ import { TemplateComponent } from './template/template.component';
     AboutUsComponent,
     ProjectsComponent,
     ContactComponent,
-    FooterComponent,
     NavComponent,
     TemplateComponent,
+    MisionComponent,
+    ServicesComponent,
+    ExtrasComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
