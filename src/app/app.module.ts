@@ -9,7 +9,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { ContactComponent } from './contact/contact.component';
 import { NavComponent } from './Share/components/nav/nav.component';
 import { TemplateComponent } from './template/template.component';
-import { MisionComponent } from './mision/mision.component';
+import { MissionComponent } from './mission/mission.component';
 import { ServicesComponent } from './services/services.component';
 import { ExtrasComponent } from './Share/components/extras/extras.component';
 
@@ -22,7 +22,7 @@ import { ExtrasComponent } from './Share/components/extras/extras.component';
     ContactComponent,
     NavComponent,
     TemplateComponent,
-    MisionComponent,
+    MissionComponent,
     ServicesComponent,
     ExtrasComponent,
   ],
