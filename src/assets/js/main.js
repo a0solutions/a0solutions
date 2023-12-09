@@ -48,7 +48,6 @@ function scrollAll() {
       : "",
     $backtotop = $("a.backtotop"),
     animationsRepeat = true, // true, false - Only when you use Fullpage.js
-    target,
     trueMobile;
 
   function getWindowWidth() {
@@ -135,10 +134,6 @@ function scrollAll() {
           $body.addClass("ln-fullpage-active");
 
           $ln_fullPage.fullpage({
-            //Navigation
-            menu: "#navigation",
-            lockAnchors: false,
-
             //Scrolling
             scrollingSpeed: 700,
             autoScrolling: true,
@@ -149,10 +144,6 @@ function scrollAll() {
             loopBottom: false,
             loopTop: false,
             scrollOverflow: true,
-
-            //Accessibility
-            animateAnchor: true,
-            recordHistory: false,
 
             //Design
             controlArrows: false,
@@ -198,19 +189,19 @@ function scrollAll() {
                 );
               }
 
-              // Set Section Navbar Scheme
-              ln_navigationChangeClasses("", $(".pageData").eq(nextIndex - 1));
-
               // Set Section UI Scheme
               var uiScheme = $(".pageData")
                 .eq(nextIndex - 1)
                 .attr("data-ui");
-              ln_setSectionScheme(uiScheme);
+              var navSelect = $(".pageData")
+                .eq(nextIndex - 1)
+                .attr("data-anchor");
+              ln_setSectionScheme(uiScheme, navSelect);
 
               // Scroll progress
               ln_scrollProgress(nextIndex);
             },
-            afterLoad: function (anchorLink, index) {
+            afterLoad: function (index) {
               if (index == 1) {
                 $body.addClass("ln-fullpage-intro-active");
                 $backtotop.removeClass("active");
@@ -263,13 +254,10 @@ function scrollAll() {
                   sectionOverlayOpacity / 100
                 );
               }
-
-              // Set Section Navbar Scheme
-              ln_navigationChangeClasses("section", $(".pageData").eq(0));
-
               // Set Section UI Scheme
               var uiScheme = $(".pageData").eq(0).attr("data-ui");
-              ln_setSectionScheme(uiScheme);
+              var navSelect = $(".pageData").eq(0).attr("data-anchor");
+              ln_setSectionScheme(uiScheme, navSelect);
             },
           });
         }
@@ -297,14 +285,37 @@ function scrollAll() {
   }
 
   // [3. Set Section Scheme]
-  function ln_setSectionScheme(uiScheme) {
+  function ln_setSectionScheme(uiScheme, navSelect) {
     if (uiScheme === "light") {
       $body.removeClass("ui-dark").addClass("ui-light");
+      setTimeout(function () {
+        $siteNavbar
+          .delay(2000)
+          .removeClass("navbar-light")
+          .addClass("navbar-dark");
+      }, 500);
     } else if (uiScheme === "dark") {
       $body.removeClass("ui-light").addClass("ui-dark");
+      setTimeout(function () {
+        $siteNavbar
+          .delay(2000)
+          .removeClass("navbar-dark")
+          .addClass("navbar-light");
+      }, 500);
     } else {
       $body.removeClass("ui-dark ui-light");
     }
+
+    setTimeout(function () {
+      $siteNavbarMenu
+        .find("li")
+        .removeClass("active")
+        .each(function () {
+          if ($(this).attr("data-menuanchor") == navSelect) {
+            $(this).addClass("active");
+          }
+        });
+    }, 500);
   }
 
   // [4. Scroll progress]
@@ -326,100 +337,6 @@ function scrollAll() {
   }
 
   // [5. Navigation]
-  function ln_navigation() {
-    var smoothScrollLinks = $('a.scrollto, .site-navbar a[href^="#"]');
-
-    // Smooth Scroll
-    smoothScrollLinks.off("click");
-    smoothScrollLinks.on("click", function (e) {
-      e.preventDefault();
-      var target = $(this).attr("href");
-
-      if ($body.hasClass("ln-fullpage-active")) {
-        target = target.substr(1);
-
-        $.fn.fullpage.moveTo(target);
-      } else {
-        if ($(this).parents("li").attr("data-menuanchor")) {
-          target = $('[data-anchor="' + target.substr(1) + '"]');
-        } else if ($('[data-anchor="' + target.substr(1) + '"]').length > 0) {
-          target = $('[data-anchor="' + target.substr(1) + '"]');
-        }
-
-        $.smoothScroll({
-          offset: 0,
-          easing: "swing",
-          speed: 800,
-          scrollTarget: target,
-          preventDefault: false,
-        });
-      }
-    });
-
-    // Navigation collapse
-    $siteNavbarCollapse.on("show.bs.collapse", function () {
-      $siteNavbar.addClass("navbar-toggled-show");
-      ln_navigationChangeClasses("toggled");
-    });
-
-    $siteNavbarCollapse.on("hidden.bs.collapse", function () {
-      $siteNavbar.removeClass("navbar-toggled-show");
-
-      if ($siteNavbar.hasClass("scrolled")) {
-        ln_navigationChangeClasses("scrolled");
-      } else {
-        ln_navigationChangeClasses();
-      }
-    });
-
-    // Close nav on click outside of '.site-navbar'
-    $(document).on("click touchstart", function (e) {
-      if (
-        $(".site-navbar").is(e.target) ||
-        $(e.target).parents(".site-navbar").length > 0 ||
-        $(".site-navbar").is(e.target) ||
-        $(e.target).hasClass("navbar-toggler")
-      ) {
-        return;
-      }
-
-      if ($siteNavbarToggler.attr("aria-expanded") === "true") {
-        $siteNavbarToggler.trigger("click");
-      }
-    });
-  }
-
-  function ln_navigationOnScroll() {
-    var scrollPos = $(window).scrollTop();
-
-    if ($body.hasClass("ln-fullpage-active")) {
-      return false;
-    }
-
-    if (scrollPos > 0) {
-      if ($siteNavbar.hasClass("scrolled")) {
-        return false;
-      }
-
-      $siteNavbar.addClass("scrolled");
-      $siteNavbar.removeClass("scrolled-0");
-
-      if ($siteNavbar.hasClass("navbar-toggled-show")) {
-        ln_navigationChangeClasses("toggled");
-      } else {
-        ln_navigationChangeClasses("scrolled");
-      }
-    } else {
-      $siteNavbar.removeClass("scrolled");
-      $siteNavbar.addClass("scrolled-0");
-
-      if ($siteNavbar.hasClass("navbar-toggled-show")) {
-        ln_navigationChangeClasses("toggled");
-      } else {
-        ln_navigationChangeClasses();
-      }
-    }
-  }
 
   function ln_navigationResize() {
     var scrollPos = $(window).scrollTop();
@@ -435,114 +352,20 @@ function scrollAll() {
     if (scrollPos > 0) {
       $siteNavbar.addClass("scrolled");
       $siteNavbar.removeClass("scrolled-0");
-
-      if ($siteNavbar.hasClass("navbar-toggled-show")) {
-        ln_navigationChangeClasses("toggled");
-      } else {
-        ln_navigationChangeClasses("scrolled");
-      }
     } else {
       $siteNavbar.removeClass("scrolled");
       $siteNavbar.addClass("scrolled-0");
 
       if ($siteNavbar.hasClass("navbar-toggled-show")) {
-        ln_navigationChangeClasses("toggled");
       } else {
         if ($body.hasClass("ln-fullpage-active")) {
           return false;
         }
-
-        ln_navigationChangeClasses();
       }
     }
   }
 
   var nav_event_old;
-  function ln_navigationChangeClasses(nav_event, target) {
-    if (
-      nav_event_old === nav_event &&
-      !(nav_event == "" || nav_event == undefined) &&
-      nav_event !== ".pageData"
-    )
-      return false;
-
-    if (nav_event === "toggled" && siteNavbar_toggled) {
-      $siteNavbar
-        .removeClass(
-          "navbar-light navbar-dark",
-          siteNavbar_base,
-          siteNavbar_scrolled
-        )
-        .addClass(siteNavbar_toggled);
-    } else if (nav_event === "scrolled" && siteNavbar_scrolled) {
-      $siteNavbar
-        .removeClass(
-          "navbar-light navbar-dark",
-          siteNavbar_base,
-          siteNavbar_toggled
-        )
-        .addClass(siteNavbar_scrolled);
-    } else if (nav_event === ".pageData") {
-      var siteNavbar_section = target.attr("data-navbar");
-
-      if (siteNavbar_section) {
-        $siteNavbar
-          .removeClass(
-            "navbar-light navbar-dark",
-            siteNavbar_base,
-            siteNavbar_toggled,
-            siteNavbar_scrolled
-          )
-          .addClass(siteNavbar_section);
-      } else {
-        $siteNavbar
-          .removeClass(
-            "navbar-light navbar-dark",
-            siteNavbar_toggled,
-            siteNavbar_scrolled
-          )
-          .addClass(siteNavbar_base);
-      }
-    } else {
-      if (siteNavbar_base) {
-        $siteNavbar
-          .removeClass(
-            "navbar-light navbar-dark",
-            siteNavbar_toggled,
-            siteNavbar_scrolled
-          )
-          .addClass(siteNavbar_base);
-      }
-    }
-
-    if ($siteNavbar.hasClass("navbar-light")) {
-      $("[data-on-navbar-light]").each(function () {
-        var el = $(this),
-          el_light = el.attr("data-on-navbar-light")
-            ? el.attr("data-on-navbar-light")
-            : "",
-          el_dark = el.attr("data-on-navbar-dark")
-            ? el.attr("data-on-navbar-dark")
-            : "";
-
-        el.removeClass(el_dark).addClass(el_light);
-      });
-    } else if ($siteNavbar.hasClass("navbar-dark")) {
-      $("[data-on-navbar-dark]").each(function () {
-        var el = $(this),
-          el_light = el.attr("data-on-navbar-light")
-            ? el.attr("data-on-navbar-light")
-            : "",
-          el_dark = el.attr("data-on-navbar-dark")
-            ? el.attr("data-on-navbar-dark")
-            : "";
-
-        el.removeClass(el_light).addClass(el_dark);
-      });
-    }
-
-    nav_event_old = nav_event;
-  }
 
   // [6. Back to top]
   function ln_backToTop() {
@@ -684,124 +507,7 @@ function scrollAll() {
     });
   }
 
-  // // [9. Countdown]
-  // function ln_countdown() {
-  //   var countdown = $(".countdown[data-countdown]");
-
-  //   if (countdown.length > 0) {
-  //     countdown.each(function () {
-  //       var $countdown = $(this),
-  //         finalDate = $countdown.data("countdown");
-  //       $countdown.countdown(finalDate, function (event) {
-  //         $countdown.html(
-  //           event.strftime(
-  //             '<div class="countdown-container row"><div class="col-6 col-sm-auto"><div class="countdown-item"><div class="number">%-D</div><span class="title">Day%!d</span></div></div><div class="col-6 col-sm-auto"><div class="countdown-item"><div class="number">%H</div><span class="title">Hours</span></div></div><div class="col-6 col-sm-auto"><div class="countdown-item"><div class="number">%M</div><span class="title">Minutes</span></div></div><div class="col-6 col-sm-auto"><div class="countdown-item"><div class="number">%S</div><span class="title">Seconds</span></div></div></div>'
-  //           )
-  //         );
-  //       });
-  //     });
-  //   }
-  // }
-
   // [10. Magnific Popup]
-  function ln_magnificPopup() {
-    if (
-      document.querySelectorAll(".mfp-image").length > 0 ||
-      document.querySelectorAll(".mfp-gallery").length > 0 ||
-      document.querySelectorAll(".mfp-iframe").length > 0 ||
-      document.querySelectorAll(".mfp-ajax").length > 0 ||
-      document.querySelectorAll(".open-popup-link").length > 0
-    ) {
-      if (!$().magnificPopup) {
-        console.log("MagnificPopup: magnificPopup not defined.");
-        return true;
-      }
-
-      $(".mfp-image").magnificPopup({
-        type: "image",
-        closeMarkup:
-          '<button title="%title%" type="button" class="mfp-close"><i class="ion-android-close"></i></button>',
-        removalDelay: 300,
-        mainClass: "mfp-fade",
-      });
-
-      $(".mfp-gallery").each(function () {
-        $(this).magnificPopup({
-          delegate: "a",
-          type: "image",
-          gallery: {
-            enabled: true,
-          },
-          arrowMarkup:
-            '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
-          closeMarkup:
-            '<button title="%title%" type="button" class="mfp-close"><i class="ion-android-close"></i></button>',
-          removalDelay: 300,
-          mainClass: "mfp-fade",
-        });
-      });
-
-      $(".mfp-iframe").magnificPopup({
-        type: "iframe",
-        iframe: {
-          patterns: {
-            youtube: {
-              index: "youtube.com/",
-              id: "v=",
-              src: "//www.youtube.com/embed/%id%?autoplay=1",
-            },
-            vimeo: {
-              index: "vimeo.com/",
-              id: "/",
-              src: "//player.vimeo.com/video/%id%?autoplay=1",
-            },
-            gmaps: {
-              index: "//maps.google.",
-              src: "%id%&output=embed",
-            },
-          },
-          srcAction: "iframe_src",
-        },
-        closeMarkup:
-          '<button title="%title%" type="button" class="mfp-close"><i class="ion-android-close"></i></button>',
-        removalDelay: 300,
-        mainClass: "mfp-fade",
-      });
-
-      $(".mfp-ajax").magnificPopup({
-        type: "ajax",
-        ajax: {
-          settings: null,
-          cursor: "mfp-ajax-cur",
-          tError: '<a href="%url%">The content</a> could not be loaded.',
-        },
-        midClick: true,
-        closeMarkup:
-          '<button title="%title%" type="button" class="mfp-close"><i class="ion-android-close"></i></button>',
-        removalDelay: 300,
-        mainClass: "mfp-fade",
-        callbacks: {
-          ajaxContentAdded: function (mfpResponse) {
-            ln_Slider();
-          },
-        },
-      });
-
-      $(".open-popup-link").magnificPopup({
-        type: "inline",
-        midClick: true,
-        closeMarkup:
-          '<button title="%title%" type="button" class="mfp-close"><i class="ion-android-close"></i></button>',
-        removalDelay: 300,
-        mainClass: "mfp-zoom-in",
-      });
-
-      $(".popup-modal-dismiss").on("click", function (e) {
-        e.preventDefault();
-        $.magnificPopup.close();
-      });
-    }
-  }
 
   // [11. Slider]
   function ln_slider() {
@@ -827,70 +533,7 @@ function scrollAll() {
     }
   }
 
-  // [12. Subscribe Form]
-  function ln_subscribeForm() {
-    var $subscribeForm = $(".subscribe-form");
-
-    if ($subscribeForm.length > 0) {
-      $subscribeForm.each(function () {
-        var el = $(this),
-          elResult = el.find(".subscribe-form-result");
-
-        el.find("form").validate({
-          submitHandler: function (form) {
-            elResult.fadeOut(500);
-
-            $(form).ajaxSubmit({
-              target: elResult,
-              dataType: "json",
-              resetForm: true,
-              success: function (data) {
-                elResult.html(data.message).fadeIn(500);
-                if (data.alert != "error") {
-                  $(form).clearForm();
-                  setTimeout(function () {
-                    elResult.fadeOut(500);
-                  }, 5000);
-                }
-              },
-            });
-          },
-        });
-      });
-    }
-  }
-
   // [13. Contact Form]
-  function ln_contactForm() {
-    var $contactForm = $(".contact-form");
-
-    if ($contactForm.length > 0) {
-      $contactForm.each(function () {
-        var el = $(this),
-          elResult = el.find(".contact-form-result");
-
-        el.find("form").validate({
-          submitHandler: function (form) {
-            elResult.fadeOut(500);
-
-            $(form).ajaxSubmit({
-              target: elResult,
-              dataType: "json",
-              success: function (data) {
-                elResult.html(data.message).fadeIn(500);
-                if (data.alert != "error") {
-                  $(form).clearForm();
-                  setTimeout(function () {
-                    elResult.fadeOut(500);
-                  }, 5000);
-                }
-              },
-            });
-          },
-        });
-      });
-    }
-  }
 
   // [14. Bootstrap]
   function ln_bootstrap() {
@@ -915,11 +558,7 @@ function scrollAll() {
     ln_helperClasses();
     ln_slider();
     ln_fullpage();
-    ln_navigation();
     ln_backgrounds();
-    ln_magnificPopup();
-    ln_subscribeForm();
-    ln_contactForm();
   });
 
   $(window).on("load", function () {
@@ -931,7 +570,6 @@ function scrollAll() {
     ln_screenDetector();
     ln_helperClasses();
     ln_slider();
-    ln_navigation();
     ln_navigationResize();
     ln_fullpage();
     ln_scrollProgress("none");
@@ -941,6 +579,5 @@ function scrollAll() {
   $(window).on("scroll", function () {
     ln_scrollProgress("none");
     ln_backToTop();
-    ln_navigationOnScroll();
   });
 }
