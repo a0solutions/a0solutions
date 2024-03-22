@@ -1,0 +1,29 @@
+<div class="layout-wide fp-viewing-home" style="overflow: hidden; height: 100%">
+  <div class="loader bg-dark">
+    <div class="spinner-grow text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <app-nav (scroll)="scrollToElement($event)"></app-nav>
+  <app-extras></app-extras>
+  <div class="ln-fullpage" data-navigation="true">
+    <app-home class="ln-section home" data-anchor="home"></app-home>
+    <app-mision
+      class="ln-section mision"
+      data-anchor="our-mission"
+    ></app-mision>
+    <app-services
+      class="ln-section services"
+      data-anchor="what-we-do"
+    ></app-services>
+    <app-about-us
+      class="ln-section about-us"
+      data-anchor="our-solutions"
+    ></app-about-us>
+    <app-projects
+      class="ln-section project"
+      data-anchor="our-work"
+    ></app-projects>
+    <app-contact class="ln-section contact" data-anchor="contact"></app-contact>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+.btn-feriae-red {
+  background-color: rgba(77, 52, 139, 0);
+  backdrop-filter: blur(10px);
+  color: white;
+  transition: all 0.5s !important;
+  border: 1px solid white;
+}
+.btn-feriae-red:hover {
+  opacity: 0.8 !important;
+  color: white;
+}
+.animated_name {
+  height: 80px;
+}
+.btn-primary {
+  background: #4d348b !important;
+  border: 1px solid #4d348b !important;
+  transition: all 0.5s !important;
+}
+.btn-primary:hover {
+  opacity: 0.7 !important;
+}
