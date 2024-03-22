@@ -21,3 +21,7 @@
 .btn-primary:hover {
   opacity: 0.7 !important;
 }
+
+.new-card {
+  backdrop-filter: blur(25px) !important;
+}
