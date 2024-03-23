@@ -14,7 +14,10 @@ import { ServicesComponent } from './services/services.component';
 import { ExtrasComponent } from './Share/components/extras/extras.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { ContactService } from './contact/services/contactService.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AlertsService } from './Share/services/alerts.service';
+import { AlertComponent } from './Share/components/alert/alert.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,9 +30,16 @@ import { RouterModule } from '@angular/router';
     MissionComponent,
     ServicesComponent,
     ExtrasComponent,
+    AlertComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, RouterModule],
-  providers: [],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    RouterModule,
+    HttpClientModule,
+  ],
+  providers: [ContactService, AlertsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

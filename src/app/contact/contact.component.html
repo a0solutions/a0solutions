@@ -54,75 +54,106 @@
         data-animation-delay="150"
       >
         <div class="contact-form">
-          <form
-            class="mb-0"
-            id="cf"
-            name="cf"
-            action="include/sendemail.php"
-            method="post"
-            autocomplete="off"
-          >
+          <form ngForm #contactForm="ngForm" (submit)="sendForm(contactForm)">
             <div class="form-row">
               <div class="col-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group position-relative">
                   <input
+                    ngModel
+                    #name="ngModel"
                     type="text"
-                    id="cf-name"
-                    name="cf-name"
+                    name="name"
                     placeholder="Enter your name"
                     class="form-control required"
+                    required
                   />
+                  <p
+                    class="required-alert position-absolute top-50"
+                    *ngIf="name.touched && name.invalid"
+                  >
+                    Required
+                  </p>
                 </div>
               </div>
 
               <div class="col-12 col-md-6">
-                <div class="form-group">
+                <div class="form-group position-relative">
                   <input
+                    ngModel
+                    #email="ngModel"
                     type="email"
-                    id="cf-email"
-                    name="cf-email"
+                    email="true"
+                    name="email"
                     placeholder="Enter your email address"
                     class="form-control required"
+                    required
                   />
+                  <p
+                    class="required-alert position-absolute top-50"
+                    *ngIf="email.touched && email.invalid"
+                  >
+                    Required
+                  </p>
                 </div>
               </div>
 
               <div class="col-12">
-                <div class="form-group">
+                <div class="form-group position-relative">
                   <input
+                    ngModel
+                    #subject="ngModel"
                     type="text"
-                    id="cf-subject"
-                    name="cf-subject"
-                    placeholder="Subject (Optional)"
+                    name="subject"
+                    placeholder="Subject required"
                     class="form-control"
+                    required
                   />
+                  <p
+                    class="required-alert position-absolute top-50"
+                    *ngIf="subject.touched && subject.invalid"
+                  >
+                    Required
+                  </p>
                 </div>
               </div>
 
               <div class="col-12 mb-4">
-                <div class="form-group">
+                <div class="form-group position-relative">
                   <textarea
-                    name="cf-message"
-                    id="cf-message"
+                    ngModel
+                    #message="ngModel"
+                    name="message"
                     placeholder="Here goes your message"
                     class="form-control required"
                     rows="7"
+                    required
                   ></textarea>
+                  <p
+                    class="required-alert position-absolute top-50"
+                    *ngIf="message.touched && message.invalid"
+                  >
+                    Required
+                  </p>
                 </div>
               </div>
 
               <div class="col-12 d-none">
                 <input
+                  ngModel
+                  #botcheck="ngModel"
                   type="text"
-                  id="cf-botcheck"
-                  name="cf-botcheck"
+                  id="botcheck"
+                  name="botcheck"
                   value=""
                 />
               </div>
 
               <input type="hidden" name="prefix" value="cf-" />
 
-              <div class="col-12">
+              <div
+                class="col-12"
+                *ngIf="contactForm.valid && botcheck.value == ''"
+              >
                 <button
                   class="btn btn-primary"
                   type="submit"

@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 .btn-feriae-red {
   background-color: rgba(77, 52, 139, 0);
   backdrop-filter: blur(10px);
@@ -24,4 +25,16 @@
 
 .new-card {
   backdrop-filter: blur(25px) !important;
+}
+input ~ .required-alert {
+  top: 32%;
+  right: 10px;
+  font-size: 10px;
+  color: #4d348b;
+}
+textarea ~ .required-alert {
+  top: 5%;
+  right: 10px;
+  font-size: 10px;
+  color: #4d348b;
 }
